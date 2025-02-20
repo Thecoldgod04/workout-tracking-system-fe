@@ -1,6 +1,6 @@
 <template>
   <div class="w-full">
-    <Listview listName="Exercises"/>
+    <ListView listName="Exercises"/>
   </div>
 </template>
 

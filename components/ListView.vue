@@ -19,7 +19,7 @@
   }]
 
   // Selectable
-  const selected = ref(entries[1])
+  const selected = ref([])
 
   // Pagination
   const page = ref(1);
@@ -71,7 +71,8 @@
       <div id="actions" class="w-full">
         <ul class="flex float-right gap-3">
           <li><UButton icon="i-heroicons-plus">Create New [...]</UButton></li>
-          <li><UButton icon="i-heroicons-trash" color="red">Remove [...]</UButton></li>
+          <li v-if="selected.length > 0"><UButton icon="i-heroicons-trash" color="red">Remove [...]</UButton></li>
+          <li v-else><UButton icon="i-heroicons-trash" color="red" variant="soft" disabled>Remove [...]</UButton></li>
         </ul>
       </div>
     </div>
