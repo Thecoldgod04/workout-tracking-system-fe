@@ -1,63 +1,22 @@
 <script setup>
-  // List Entries: Should be props
-  const entries = [{
-    id: 1,
-    name: 'Push Up',
-    difficulty: 'Easy'
-  }, {
-    id: 2,
-    name: 'Pull Up',
-    difficulty: 'Hard'
-  }, {
-    id: 3,
-    name: 'Dip',
-    difficulty: 'Medium'
-  }, {
-    id: 4,
-    name: 'Squats',
-    difficulty: 'Easy'
-  }]
 
-  // Selectable
-  const selected = ref([])
+  // All the props for this component
+  const props = defineProps([
+    "listName",
+    "entries"
+  ]);
 
-  // Pagination
-  const page = ref(1);
-  const pageCount = 5;
-
-  // List View Name: Should be props
-  const listNameProp = defineProps({
-    listName: String
-  });
-
-  // Filter
-  const currentFilter = ref('')
-
-  //--------------- Functions ---------------
-
-  // Handling row click (Click on row)
-  function clickRow(row) {
-    // Do something with the data from the clicked row
-    console.log(row)
-  }
-
-  // Handling pagination
-  const paged = computed(() => {
-    return filtered.slice((page.value - 1) * pageCount, (page.value) * pageCount)
-  })
-
-  // Handling list filtering
-  const filtered = computed(() => {
-    if (!currentFilter.value) {
-      return entries
-    }
-
-    return entries.filter((entry) => {
-      return Object.values(entry).some((value) => {
-        return String(value).toLowerCase().includes(currentFilter.value.toLowerCase())
-      })
-    })
-  })
+  const {
+    // entries,
+    lists,
+    selected,
+    page,
+    pageCount,
+    currentFilter,
+    clickRow,
+    paged,
+    filtered
+  } = useListView(props.entries);
 </script>
 
 <template>
@@ -70,19 +29,40 @@
 
       <div id="actions" class="w-full">
         <ul class="flex float-right gap-3">
-          <li><UButton icon="i-heroicons-plus">Create New [...]</UButton></li>
-          <li v-if="selected.length > 0"><UButton icon="i-heroicons-trash" color="red">Remove [...]</UButton></li>
-          <li v-else><UButton icon="i-heroicons-trash" color="red" variant="soft" disabled>Remove [...]</UButton></li>
+          <li>
+            <UTooltip text="Create New [...]">
+              <UButton icon="i-heroicons-plus"/>
+            </UTooltip>
+          </li>
+          <li v-if="selected.length > 0">
+            <UTooltip text="Remove [...]">
+              <UButton icon="i-heroicons-trash" color="red"/>
+            </UTooltip>
+          </li>
+          <li v-else>
+            <UTooltip text="Remove [...]">
+              <UButton icon="i-heroicons-trash" color="red" variant="soft" disabled/>
+            </UTooltip>
+          </li>
         </ul>
       </div>
     </div>
 
-    <!-- Table -->
-    <UInput v-model="currentFilter" placeholder="Filter..." class="mt-6"/>
-    <UTable v-model="selected" :rows="entries" @select="clickRow"/>
-    <div class="flex justify-end mt-3">
-      <UPagination v-model="page" :page-count="pageCount" :total="entries.length" />
+    <div id="list-content" class="flex mt-6 container">
+      <div class="w-1/5 mr-3">
+        <UVerticalNavigation :links="lists"/>
+      </div>
+
+      <!-- Table -->
+      <div id="table" class="w-full overflow-auto h-1/2">
+        <UInput v-model="currentFilter" placeholder="Filter..." class="w-1/4"/>
+        <UTable v-model="selected" :rows="paged" @select="clickRow" class=""/>
+        <div class="flex justify-end mt-3">
+          <UPagination v-model="page" :page-count="pageCount" :total="entries.length" />
+        </div>
+      </div>
     </div>
+
   </div>
 </template>
 

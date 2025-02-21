@@ -1,26 +1,13 @@
 <script setup>
-const entries = [{
-    id: 1,
-    name: 'Push Up',
-    difficulty: 'Easy'
-  }, {
-    id: 2,
-    name: 'Pull Up',
-    difficulty: 'Hard'
-  }, {
-    id: 3,
-    name: 'Dip',
-    difficulty: 'Medium'
-  }, {
-    id: 4,
-    name: 'Squats',
-    difficulty: 'Easy'
-  }]
-
-const selected = ref([entries[-1]])
+  // const {data: entries} = await useFetch('https://fakestoreapi.com/products');
+  const {data, error} = await useFetch('https://dummyjson.com/users');
+  console.log(data.users);
 </script>
 
 <template>
-  <UTable v-model="selected" :rows="entries" @select="clickRow"/>
+  Test Page
+  <div v-for="entry in data.users">
+    {{ entry.id }}
+  </div>
 </template>
 
