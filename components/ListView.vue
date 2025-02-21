@@ -17,6 +17,7 @@
     paged,
     filtered
   } = useListView(props.entries);
+  
 </script>
 
 <template>
@@ -56,7 +57,8 @@
       <!-- Table -->
       <div id="table" class="w-full overflow-auto h-1/2">
         <UInput v-model="currentFilter" placeholder="Filter..." class="w-1/4"/>
-        <UTable v-model="selected" :rows="paged" @select="clickRow" class=""/>
+        <!-- <UTable v-model="selected" :rows="paged" @select="clickRow" class=""/> -->
+        <Table v-model="selected" :rows="paged" :onRowClicked="clickRow" maxHeight="200px"/>
         <div class="flex justify-end mt-3">
           <UPagination v-model="page" :page-count="pageCount" :total="entries.length" />
         </div>
