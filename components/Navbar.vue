@@ -47,7 +47,7 @@
 
 <template>
 
-  <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
+  <nav class="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700 sticky top-0 z-50">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       
       <!-- Passing values into the props -->
