@@ -30,6 +30,31 @@
 
   const refreshTable = ref(false);
 
+  const moreActions = [
+    [{
+      label: 'Edit',
+      icon: 'i-heroicons-pencil-square-20-solid',
+      click: () => {
+        console.log('Edit')
+      }
+    },],
+    [{
+      label: 'Import',
+      icon: 'i-heroicons-arrow-down-on-square-solid',
+      click: () => {
+        console.log('Import');
+      }
+    }, {
+      label: 'Export',
+      icon: 'i-heroicons-arrow-up-on-square-solid',
+      click: () => {
+        console.log('Export');
+      }
+    },]
+  ]
+
+  // ------------ Functions ------------
+
   function onRowClicked(rowData) {
     console.log(rowData);
   }
@@ -95,6 +120,15 @@
               <UButton icon="i-heroicons-trash" color="red" variant="soft" disabled/>
             </UTooltip>
           </li>
+            <UDropdown :items="moreActions" :popper="{ placement: 'bottom-end' }">
+              <UTooltip text="More Actions">
+                <UButton label="More Actions" variant="outline" trailing-icon="i-heroicons-chevron-down-20-solid"/>
+              </UTooltip>
+            </UDropdown>
+          <li>
+
+          </li>
+
         </ul>
       </div>
     </div>
@@ -108,7 +142,6 @@
       <!-- Table -->
       <div id="table" class="w-full overflow-auto h-1/2">
         <!-- <UInput v-model="currentFilter" placeholder="Filter..." class="w-1/4"/> -->
-        <!-- {{ refreshTable }} -->
         <Table
           :onRowClicked="onRowClicked" 
           :maxHeight="tableMaxHeight"
