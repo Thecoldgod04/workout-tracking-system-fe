@@ -27,6 +27,7 @@
   const tableMaxHeight = ref("700px");
 
   const isModalOpen = ref(false);
+  const currentModal = ref("");
 
   const refreshTable = ref(false);
 
@@ -57,6 +58,14 @@
 
   function onRowClicked(rowData) {
     console.log(rowData);
+  }
+
+  function onModalOpen(currModal) {
+    isModalOpen.value = true;
+    currentModal.value = currModal;
+  }
+  function onModalClose() {
+    isModalOpen.value = false;
   }
 
   async function onFormSubmit(data) {
@@ -91,9 +100,12 @@
 <template>
   <div>
     <!-- Modals -->
-    <UModal v-model="isModalOpen" title="Edit Record">
-      <div class="p-6">
-        <RecordEditForm :fields="fields" formName="Add Record" @submit="onFormSubmit"/>
+    <UModal v-model="isModalOpen">
+      <div class="p-6 flex justify-center">
+        <RecordEditForm v-if="currentModal=='edit'" 
+          :fields="fields" formName="Add Record" @submit="onFormSubmit"/>
+        <ConfirmationForm v-else-if="currentModal=='confirmation'"
+          formName="Are You Sure?" @submit="" @cancel="onModalClose"/>
       </div>
     </UModal>
 
@@ -107,12 +119,12 @@
         <ul class="flex float-right gap-3">
           <li>
             <UTooltip text="Create New [...]">
-              <UButton icon="i-heroicons-plus" @click="isModalOpen=true"/>
+              <UButton icon="i-heroicons-plus" @click="() => onModalOpen('edit')"/>
             </UTooltip>
           </li>
           <li v-if="selected.length > 0">
             <UTooltip text="Remove [...]">
-              <UButton icon="i-heroicons-trash" color="red"/>
+              <UButton icon="i-heroicons-trash" color="red" @click="() => onModalOpen('confirmation')"/>
             </UTooltip>
           </li>
           <li v-else>
