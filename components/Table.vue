@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-    import { ref, defineEmits } from 'vue';
+    import { ref } from 'vue';
     import { AgGridVue } from 'ag-grid-vue3';
     import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
     import { TableModel, PagingModel } from '~/models/TableModel';
@@ -48,7 +48,6 @@
         'rowClicked',
         'rowSelected',
     ]);
-    
 
     const pageSize = ref(props.tableModel.pagingModel.pageSize);
 
@@ -63,7 +62,6 @@
     const rowSelection = {
         mode: "multiRow",
         checkboxes: false,
-
     };
 
     const isAllSelected = ref(false);
@@ -94,28 +92,41 @@
             rowCount: null, // Unknown total row count
             getRows: async (params) => {
                 const { startRow, endRow } = params;
-                const limit = endRow - startRow;
-                const skip = startRow;
+                // const limit = endRow - startRow;
+                // const skip = startRow;
+
+                // Get the page number
+                const pageNumber = startRow / pageSize.value;
 
                 try {
                     let fullUrl = props.tableModel.tableDataModel.tableApiModel.url + '?';
 
-                    if(props.tableModel.tableDataModel.tableApiModel.limitKeyword) {
-                        fullUrl += props.tableModel.tableDataModel.tableApiModel.limitKeyword + '=' + limit;
+                    if(props.tableModel.tableDataModel.tableApiModel.pageNumKeyword) {
+                        fullUrl += props.tableModel.tableDataModel.tableApiModel.pageNumKeyword + '=' + pageNumber;
                     }
-                    if(props.tableModel.tableDataModel.tableApiModel.offsetKeyword) {
-                        fullUrl += '&' + props.tableModel.tableDataModel.tableApiModel.offsetKeyword + '=' + skip;
+                    if(props.tableModel.tableDataModel.tableApiModel.pageSizeKeyword) {
+                        fullUrl += '&' + props.tableModel.tableDataModel.tableApiModel.pageSizeKeyword + '=' + pageSize.value;
                     }
-                    // const response = await fetch(`${props.tableModel.tableDataModel.tableApiModel.url}?limit=${limit}&skip=${skip}`);
                     const response = await fetch(fullUrl);
                     const data = await response.json();
 
                     // Send fetched rows to AG Grid
                     if(Array.isArray(data)) {
+                        // Todo: This is buggy, need to fix
                         params.successCallback(data, data.length);
                     }
                     else {
-                        params.successCallback(data[props.tableModel.tableDataModel.tableApiModel.dataKeyword], data[props.tableModel.tableDataModel.tableApiModel.totalKeyword]);
+                        const objList = props.tableModel.tableDataModel.tableApiModel.totalKeyword.split(".");
+                        let tempData = data;
+                        objList.forEach(element => {
+                            tempData = tempData[element];
+                        });
+                        const totalElements = tempData
+
+                        params.successCallback(
+                            data[props.tableModel.tableDataModel.tableApiModel.dataKeyword], 
+                            totalElements
+                        );
                     }
                 } catch (error) {
                     console.error("Error fetching rows:", error);

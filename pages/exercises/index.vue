@@ -3,60 +3,34 @@
     <ListView 
       listName="Exercises"
       :tableDataModel="tableDataModel"
+      :fields="fields"
     />
   </div>
 </template>
 
 <script setup>
   import { TableApiModel, TableDataModel } from '@/models/TableModel';
+import { FieldModel } from '~/models/FieldModel';
 
-  // const url = 'https://dummyjson.com/users';
-  // const tableApiModel = new TableApiModel(
-  //   url,
-  //   "limit",
-  //   "skip",
-  //   "total",
-  //   "users"
-  // );
-
-  // const headers = [
-  //   { headerName: 'ID', field: 'id' },
-  //   { headerName: 'First Name', field: 'firstName' },
-  //   { headerName: 'Last Name', field: 'lastName' },
-  //   { headerName: 'Email', field: 'email' },
-  //   { headerName: 'Age', field: 'age' }
-  // ];
-
-  const url = 'https://dummyjson.com/c/98fc-86cf-498a-ae12';
+  const url = 'http://localhost:8080/exercises';
   const tableApiModel = new TableApiModel(
     url,
-    null,
-    null,
-    "total",
-    "exercises"
+    "pageNumber",
+    "pageSize",
+    "page.totalElements",
+    "content"
   );
 
   const headers = [
     { headerName: 'ID', field: 'id' },
     { headerName: 'Name', field: 'name' },
     { headerName: 'Difficulty', field: 'difficulty' },
-  ]
+  ];
 
-  // const url = 'https://fakestoreapi.com/products';
-  // const tableApiModel = new TableApiModel(
-  //   url,
-  //   null,
-  //   null,
-  //   null,
-  //   null
-  // );
-
-  // const headers = [
-  //   { headerName: 'ID', field: 'id' },
-  //   { headerName: 'Title', field: 'title' },
-  //   { headerName: 'Price', field: 'price' },
-  //   { headerName: 'Category', field: 'category' },
-  // ]
+  const fields = [
+    new FieldModel('name', 'Name', 'text', true, null, null),
+    new FieldModel('difficulty', 'Difficulty', 'picklist', true, 'Easy', ['Easy', 'Medium', 'Hard', 'Very Hard']),
+  ];
 
   const tableDataModel = new TableDataModel(headers, tableApiModel, null);
 

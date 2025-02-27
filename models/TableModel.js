@@ -14,10 +14,10 @@ export class TableDataModel {
 }
 
 export class TableApiModel {
-    constructor(url, limitKeyword, offsetKeyword, totalKeyword, dataKeyword) {
+    constructor(url, pageNumKeyword, pageSizeKeyword, totalKeyword, dataKeyword) {
         this.url = url;
-        this.limitKeyword = limitKeyword;
-        this.offsetKeyword = offsetKeyword;
+        this.pageNumKeyword = pageNumKeyword;
+        this.pageSizeKeyword = pageSizeKeyword;
         this.totalKeyword = totalKeyword;
         this.dataKeyword = dataKeyword;
     }

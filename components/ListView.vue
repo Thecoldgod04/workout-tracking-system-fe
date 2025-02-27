@@ -7,6 +7,7 @@
     listName: String,
     entries: Array,
     tableDataModel: TableDataModel,
+    fields: Array,
   });
 
   const lists = [{
@@ -25,14 +26,52 @@
   
   const tableMaxHeight = ref("700px");
 
+  const isModalOpen = ref(false);
+
+  const refreshTable = ref(false);
+
   function onRowClicked(rowData) {
     console.log(rowData);
+  }
+
+  async function onFormSubmit(data) {
+    // console.log(data);
+    isModalOpen.value = false;
+    const url = props.tableDataModel.tableApiModel.url + '/save';
+
+    const toast = useToast();
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      }).then(
+        toast.add({
+          title: 'Success',
+          description: 'The record has been saved successfully.',
+          icon: 'i-heroicons-check-circle'
+        }),
+        refreshTable.value = !refreshTable.value
+      );
+    }
+    catch(error) {
+      console.log('Error', error);
+    }
   }
 
 </script>
 
 <template>
   <div>
+    <!-- Modals -->
+    <UModal v-model="isModalOpen" title="Edit Record">
+      <div class="p-6">
+        <RecordEditForm :fields="fields" formName="Add Record" @submit="onFormSubmit"/>
+      </div>
+    </UModal>
+
     <!-- Action Bar -->
     <div id="action-bar" class="flex">
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
@@ -43,7 +82,7 @@
         <ul class="flex float-right gap-3">
           <li>
             <UTooltip text="Create New [...]">
-              <UButton icon="i-heroicons-plus"/>
+              <UButton icon="i-heroicons-plus" @click="isModalOpen=true"/>
             </UTooltip>
           </li>
           <li v-if="selected.length > 0">
@@ -61,23 +100,22 @@
     </div>
 
     <div id="list-content" class="flex mt-6 container">
-      <div class="w-1/5 mr-3">
-        <UVerticalNavigation :links="lists"/>
+      <div class="w-1/5 mr-3 border-r border-gray-600"> 
+        <span class="text-xl font-semibold dark:text-white">Lists</span>
+        <UVerticalNavigation :links="lists" class="mt-3"/>
       </div>
 
       <!-- Table -->
       <div id="table" class="w-full overflow-auto h-1/2">
         <!-- <UInput v-model="currentFilter" placeholder="Filter..." class="w-1/4"/> -->
-        <!-- <UTable v-model="selected" :rows="paged" @select="clickRow" class=""/> -->
+        <!-- {{ refreshTable }} -->
         <Table
           :onRowClicked="onRowClicked" 
           :maxHeight="tableMaxHeight"
           :tableModel="tableModel"
           v-model="selected"
+          :key="refreshTable"
         />
-        <div class="flex justify-end mt-3">
-          <!-- <UPagination v-model="page" :page-count="pageCount" :total="entries.length" /> -->
-        </div>
       </div>
     </div>
 

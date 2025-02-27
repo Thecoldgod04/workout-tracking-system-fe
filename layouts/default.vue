@@ -8,11 +8,14 @@
     <div id="app" class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
       <slot />
     </div>
+
+    <UNotifications :ui="{
+      position: 'top-0 bottom-[unset]'
+    }"/>
   </div>
 </template>
 
 <script setup>
-
 </script>
 
 <style>
