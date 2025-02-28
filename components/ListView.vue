@@ -35,6 +35,12 @@
 
   const moreActions = [
     [{
+      label: 'Refresh',
+      icon: 'i-heroicons-arrow-path-20-solid',
+      click: () => {
+        refreshTable.value = !refreshTable.value
+      }
+    }, {
       label: 'Edit',
       icon: 'i-heroicons-pencil-square-20-solid',
       click: () => {
@@ -78,11 +84,11 @@
     await request(
       'POST',
       '/exercises/save',
+      null,
       data,
-      () => {
-        refreshTable.value = !refreshTable.value
-      }
-    )
+      false
+    );
+    refreshTable.value = !refreshTable.value;
   }
 
   async function onRemovalConfirmed() {
@@ -94,13 +100,13 @@
 
     await request(
       'DELETE', 
-      '/exercises/delete', 
+      '/exercises/delete',
+      null,
       selectedIds,
-      () => {
-        refreshTable.value = !refreshTable.value
-        selected.value = [];
-      }
+      false
     );
+    refreshTable.value = !refreshTable.value
+    selected.value = [];
   }
 
 </script>

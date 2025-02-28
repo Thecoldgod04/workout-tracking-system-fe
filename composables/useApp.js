@@ -7,33 +7,48 @@ export const useApp = () => {
 
     // ---------------- Functions ----------------
 
-    async function request(method, endpoint, body, onSuccess = null, onError = null, successMessage = defaultSuccessMessage, errorMessage = defaultErrorMessage) {
-        const url = backendUrl + endpoint;
+    async function request(method, endpoint, params, body, hideAlert = true, successMessage = defaultSuccessMessage, errorMessage = defaultErrorMessage) {
+        let url = backendUrl + endpoint;
+
+        if(params) {
+            url += "?"
+            params.forEach(element => {
+                url += element.key + '=' + element.value + '&';
+            });
+        }
+
         try {
-            const response = await fetch(url, {
+            const requestData = {
                 method: method,
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(body),
-            }).then(
+                ...(body ? { body: JSON.stringify(body) } : {}) // Only add 'body' if 'body' is not null
+            };
+            const response = await fetch(url, requestData);
+            const data = await response.json();
+            
+            if(!response.ok) { throw new Error(data?.message || errorMessage); }
+
+            if(!hideAlert) {
                 toast.add({
                     title: 'Success',
                     description: successMessage,
                     icon: 'i-heroicons-check-circle-solid',
-                }),
-                onSuccess()
-            );
+                });
+            }
+
+            return data;
         }
         catch(error) {
             console.log('Error', error);
+            if(hideAlert) return;
             toast.add({
                 title: 'Error',
                 description: errorMessage,
                 icon: 'i-heroicons-x-circle-solid',
                 color: 'red'
             });
-            onError();
         }
     }
 

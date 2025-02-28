@@ -25,7 +25,8 @@
     import { AgGridVue } from 'ag-grid-vue3';
     import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
     import { TableModel, PagingModel } from '~/models/TableModel';
-    
+    import { PaginationRequestModel, SortModel, FilterModel } from '~/models/PaginationRequestModel'
+
     const theme = themeQuartz.withPart(colorSchemeDarkBlue).withParams({
         // Override any theme parameters here
     });
@@ -34,6 +35,7 @@
         flex: 1,  // Makes columns fill the width evenly
         minWidth: 100,
         filter: true,
+        floatingFilter: true,
     });
 
     const props = defineProps({
@@ -48,6 +50,8 @@
         'rowClicked',
         'rowSelected',
     ]);
+
+    const { request } = useApp();
 
     const pageSize = ref(props.tableModel.pagingModel.pageSize);
 
@@ -91,22 +95,45 @@
         const dataSource = {
             rowCount: null, // Unknown total row count
             getRows: async (params) => {
-                const { startRow, endRow } = params;
+                const { startRow, endRow, filterModel, sortModel } = params;
+
+                // console.log(params);
 
                 // Get the page number
                 const pageNumber = startRow / pageSize.value;
+                
+                const requestParams = [];
+                
+                const paginationRequestModel = new PaginationRequestModel();
 
                 try {
                     let fullUrl = props.tableModel.tableDataModel.tableApiModel.url + '?';
 
                     if(props.tableModel.tableDataModel.tableApiModel.pageNumKeyword) {
-                        fullUrl += props.tableModel.tableDataModel.tableApiModel.pageNumKeyword + '=' + pageNumber;
+                        requestParams.push({
+                            key: props.tableModel.tableDataModel.tableApiModel.pageNumKeyword,
+                            value: pageNumber
+                        });
                     }
                     if(props.tableModel.tableDataModel.tableApiModel.pageSizeKeyword) {
-                        fullUrl += '&' + props.tableModel.tableDataModel.tableApiModel.pageSizeKeyword + '=' + pageSize.value;
+                        requestParams.push({
+                            key: props.tableModel.tableDataModel.tableApiModel.pageSizeKeyword,
+                            value: pageSize.value
+                        });
                     }
-                    const response = await fetch(fullUrl);
-                    const data = await response.json();
+                    if(sortModel.length > 0) {
+                        const computedSortModel = new SortModel(sortModel[0].sort, sortModel[0].colId);
+                        paginationRequestModel.sortModel = computedSortModel;
+                    }
+                    // const response = await fetch(fullUrl);
+                    // const data = await response.json();
+                    
+                    const data = await request(
+                        'POST',
+                        '/exercises',
+                        requestParams,
+                        paginationRequestModel
+                    );
 
                     // Send fetched rows to AG Grid
                     if(Array.isArray(data)) {
