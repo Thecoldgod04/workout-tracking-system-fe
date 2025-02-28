@@ -18,6 +18,8 @@
     label: 'Outdated Exercises',
   }];
 
+  const { request } = useApp();
+
   const selected = ref([]);
 
   const pagingModel = new PagingModel(20, null);
@@ -52,7 +54,9 @@
         console.log('Export');
       }
     },]
-  ]
+  ];
+
+  const toast = useToast();
 
   // ------------ Functions ------------
 
@@ -68,31 +72,35 @@
     isModalOpen.value = false;
   }
 
-  async function onFormSubmit(data) {
-    // console.log(data);
+  async function onEditFormSubmit(data) {
     isModalOpen.value = false;
-    const url = props.tableDataModel.tableApiModel.url + '/save';
 
-    const toast = useToast();
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      }).then(
-        toast.add({
-          title: 'Success',
-          description: 'The record has been saved successfully.',
-          icon: 'i-heroicons-check-circle'
-        }),
+    await request(
+      'POST',
+      '/exercises/save',
+      data,
+      () => {
         refreshTable.value = !refreshTable.value
-      );
-    }
-    catch(error) {
-      console.log('Error', error);
-    }
+      }
+    )
+  }
+
+  async function onRemovalConfirmed() {
+    isModalOpen.value = false;
+    const selectedIds = [];
+    selected.value.forEach(element => {
+      selectedIds.push(element.id);
+    });
+
+    await request(
+      'DELETE', 
+      '/exercises/delete', 
+      selectedIds,
+      () => {
+        refreshTable.value = !refreshTable.value
+        selected.value = [];
+      }
+    );
   }
 
 </script>
@@ -103,9 +111,9 @@
     <UModal v-model="isModalOpen">
       <div class="p-6 flex justify-center">
         <RecordEditForm v-if="currentModal=='edit'" 
-          :fields="fields" formName="Add Record" @submit="onFormSubmit"/>
+          :fields="fields" formName="Add Record" @submit="onEditFormSubmit"/>
         <ConfirmationForm v-else-if="currentModal=='confirmation'"
-          formName="Are You Sure?" @submit="" @cancel="onModalClose"/>
+          formName="Are You Sure?" @submit="onRemovalConfirmed" @cancel="onModalClose"/>
       </div>
     </UModal>
 

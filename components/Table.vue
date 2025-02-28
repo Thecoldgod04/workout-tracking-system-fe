@@ -92,8 +92,6 @@
             rowCount: null, // Unknown total row count
             getRows: async (params) => {
                 const { startRow, endRow } = params;
-                // const limit = endRow - startRow;
-                // const skip = startRow;
 
                 // Get the page number
                 const pageNumber = startRow / pageSize.value;
