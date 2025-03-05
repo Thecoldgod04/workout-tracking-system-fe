@@ -7,7 +7,15 @@ export const useApp = () => {
 
     // ---------------- Functions ----------------
 
-    async function request(method, endpoint, params, body, hideAlert = true, successMessage = defaultSuccessMessage, errorMessage = defaultErrorMessage) {
+    async function request(
+        method, 
+        endpoint, 
+        params, 
+        body, 
+        hideAlert = true, 
+        successMessage = defaultSuccessMessage, 
+        errorMessage = defaultErrorMessage
+    ) {
         let url = backendUrl + endpoint;
 
         if(params) {
