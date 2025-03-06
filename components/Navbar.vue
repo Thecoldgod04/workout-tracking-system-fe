@@ -4,7 +4,13 @@
 
   const router = useRouter();
 
-  const links = [{
+  const userProfile = ref(null);
+  const items = ref([]);
+  const links = ref([]);
+
+  onMounted(fetchUserProfile);
+
+  links.value = [{
     label: 'Home',
     icon: 'i-heroicons-home-solid',
     to: '/'
@@ -16,40 +22,44 @@
     label: 'About',
     icon: 'i-heroicons-information-circle-solid',
     to: '/about'
-  }]
+  }];
 
-  const items = [
-    [{
-      label: 'Profile',
-      avatar: {
-        src: 'https://avatars.githubusercontent.com/u/739984?v=4'
-      }
-    }], [{
-      label: 'Edit',
-      icon: 'i-heroicons-pencil-square-20-solid',
-      shortcuts: ['E'],
-      click: () => {
-        console.log('Edit')
-      }
-    }, {
-      label: 'Duplicate',
-      icon: 'i-heroicons-document-duplicate-20-solid',
-      shortcuts: ['D'],
-      disabled: true
-    }], [{
-      label: 'Archive',
-      icon: 'i-heroicons-archive-box-20-solid'
-    }, {
-      label: 'Move',
-      icon: 'i-heroicons-arrow-right-circle-20-solid'
-    }], [{
-      label: 'Logout',
-      icon: 'i-heroicons-arrow-left-start-on-rectangle-20-solid',
-      click: () => {
-        logout();
-      }
-    }]
-  ];
+  async function fetchUserProfile() {
+    userProfile.value = await request('GET', '/user-info', null, null);  // Request for the user info data
+  
+    items.value = [
+      [{
+        label: 'Profile',
+        avatar: {
+          src: userProfile.value.avatarUrl
+        }
+      }], [{
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        shortcuts: ['E'],
+        click: () => {
+          console.log('Edit')
+        }
+      }, {
+        label: 'Duplicate',
+        icon: 'i-heroicons-document-duplicate-20-solid',
+        shortcuts: ['D'],
+        disabled: true
+      }], [{
+        label: 'Archive',
+        icon: 'i-heroicons-archive-box-20-solid'
+      }, {
+        label: 'Move',
+        icon: 'i-heroicons-arrow-right-circle-20-solid'
+      }], [{
+        label: 'Logout',
+        icon: 'i-heroicons-arrow-left-start-on-rectangle-20-solid',
+        click: () => {
+          logout();
+        }
+      }]
+    ];
+  }
 
   function logout() {
     const response = request(
@@ -83,7 +93,10 @@
           <li>
             <UDropdown :items="items" :popper="{ placement: 'bottom-end' }">
               <UTooltip text="Profile">
-                <UButton icon="i-heroicons-user-solid" variant="ghost" size="md" trailing-icon="i-heroicons-chevron-down-20-solid"/>
+                <!-- <UButton icon="i-heroicons-user-solid" variant="ghost" size="md" trailing-icon="i-heroicons-chevron-down-20-solid"/> -->
+                <UButton variant="ghost" size="md" trailing-icon="i-heroicons-chevron-down-20-solid">
+                  <UAvatar :src="userProfile?.avatarUrl" size="2xs"/>
+                </UButton>
               </UTooltip>
             </UDropdown>
           </li>
