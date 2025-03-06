@@ -28,6 +28,7 @@ export const useApp = () => {
         try {
             const requestData = {
                 method: method,
+                credentials: 'include', // Ensure cookies are sent with requests
                 headers: {
                     'Content-Type': 'application/json',
                 },

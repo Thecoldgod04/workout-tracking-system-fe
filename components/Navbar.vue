@@ -1,4 +1,9 @@
 <script setup>
+
+  const { request } = useApp();
+
+  const router = useRouter();
+
   const links = [{
     label: 'Home',
     icon: 'i-heroicons-home-solid',
@@ -38,11 +43,26 @@
       label: 'Move',
       icon: 'i-heroicons-arrow-right-circle-20-solid'
     }], [{
-      label: 'Delete',
-      icon: 'i-heroicons-trash-20-solid',
-      shortcuts: ['⌘', 'D']
+      label: 'Logout',
+      icon: 'i-heroicons-arrow-left-start-on-rectangle-20-solid',
+      click: () => {
+        logout();
+      }
     }]
-  ]
+  ];
+
+  function logout() {
+    const response = request(
+      'POST',
+      '/auth/logout',
+      null,
+      null
+    );
+
+    if(response) {
+      router.push('/login');
+    }
+  }
 </script>
 
 <template>
