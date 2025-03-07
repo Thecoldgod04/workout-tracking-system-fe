@@ -5,7 +5,7 @@
 
     <Navbar />
 
-    <div id="app" class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+    <div id="app" class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
       <slot />
     </div>
 

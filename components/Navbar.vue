@@ -32,6 +32,9 @@
         label: 'Profile',
         avatar: {
           src: userProfile.value.avatarUrl
+        },
+        click: () => {
+          router.push('/profile')
         }
       }], [{
         label: 'Edit',
