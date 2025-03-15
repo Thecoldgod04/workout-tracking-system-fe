@@ -62,9 +62,28 @@
     },]
   ];
 
+  const customLists = ref([]);
+
   const toast = useToast();
 
   // ------------ Functions ------------
+
+  onMounted(loadAsyncData)
+
+  async function loadAsyncData() {
+    const customListsRequest = await request(
+      'GET',
+      '/custom-list',
+      [{
+        key: 'moduleName',
+        value: props.listName
+      }],
+      null
+    );
+    customLists.value = customListsRequest.map(obj => ({
+      label: obj.title
+    }));
+  }
 
   function onRowClicked(rowData) {
     console.log(rowData);
@@ -112,7 +131,7 @@
 </script>
 
 <template>
-  <div>
+  <div class="mt-3">
     <!-- Modals -->
     <UModal v-model="isModalOpen">
       <div class="p-6 flex justify-center">
@@ -160,9 +179,9 @@
     </div>
 
     <div id="list-content" class="flex mt-6 container">
-      <div class="w-1/5 mr-3 border-r border-gray-600"> 
+      <div class="w-1/5 mr-3 border-r border-gray-600 pr-3"> 
         <span class="text-xl font-semibold dark:text-white">Lists</span>
-        <UVerticalNavigation :links="lists" class="mt-3"/>
+        <UVerticalNavigation :links="customLists" class="mt-3"/>
       </div>
 
       <!-- Table -->

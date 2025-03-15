@@ -4,7 +4,7 @@
     </div>
 
     <div name="content" class=" flex flex-col pt-5 gap-5 relative">
-      <img class=" absolute -top-5 left-10 w-24 h-24 rounded-full outline outline-8 outline-white dark:outline-slate-950" :src="userProfile?.avatarUrl"/>
+      <img class=" absolute -top-5 left-10 w-24 h-24 rounded-full outline outline-8 outline-white dark:outline-neutral-900" :src="userProfile?.avatarUrl"/>
       
       <div name="username" class="ml-40">
         <span class="self-center text-3xl font-semibold whitespace-nowrap dark:text-white">
@@ -13,6 +13,16 @@
 
         <UButton label="Edit Profile" icon="i-heroicons-pencil-solid" class="float-end px-6"/>
       </div>
+
+      <UCard name="your-rank" class="mt-6">
+        <template #header>
+          <span class="self-center text-xl whitespace-nowrap dark:text-white">Your Rank</span>
+        </template>
+
+        <div class="flex flex-col gap-3">
+          <img id="ranking-badge" src="../public/ranking-badge.png" alt="" class="w-28 h-28">
+        </div>
+      </UCard>
 
       <UCard name="achievements" class="mt-6">
         <template #header>
@@ -30,7 +40,7 @@
             
             <template #panel>
               <div class="p-3">
-                <div class="self-center text-lg font-bold whitespace-nowrap dark:text-white">
+                <div class="self-center text-lg font-bold whitespace-nowrap dark:text-white py-2">
                   <UIcon :name="achievement.icon"/>
                   {{ achievement.label }}
                 </div>
@@ -42,7 +52,6 @@
           </UPopover>
 
         </div>
-
       </UCard>
 
       <UCard name="basic-detials" class="mt-6">
@@ -50,7 +59,12 @@
           <span class="self-center text-xl whitespace-nowrap dark:text-white">Basic Details</span>
         </template>
 
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col gap-10">
+          <div>
+            <span class="self-center text-md whitespace-nowrap text-slate-500 mr-3">Full Name</span>
+            <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">CuongNV</span>
+          </div>
+
           <div>
             <span class="self-center text-md whitespace-nowrap text-slate-500 mr-3">Email</span>
             <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">{{ userProfile?.email }}</span>
@@ -60,7 +74,6 @@
             <span class="self-center text-md whitespace-nowrap text-slate-500 mr-3">Phone</span>
             <!-- <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">{{ userProfile?.phone }}</span> -->
             <span class="self-center text-md font-semibold whitespace-nowrap dark:text-white">0397350616</span>
-            
           </div>
         </div>
 
