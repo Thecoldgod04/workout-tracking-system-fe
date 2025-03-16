@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exercise Detail - Workout Tracker</title>
+  <style>
+    /* Reset and base styles */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.5;
+      color: #333;
+      background-color: #f5f5f5;
+      padding: 20px;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
+    
+    /* Header */
+    .header {
+      padding: 20px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .back-button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #666;
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+    }
+    
+    .back-button svg {
+      margin-right: 5px;
+    }
+    
+    /* Main content */
+    .content {
+      padding: 20px;
+    }
+    
+    /* Exercise header */
+    .exercise-header {
+      margin-bottom: 20px;
+    }
+    
+    .exercise-title {
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+    
+    .exercise-category {
+      color: #666;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .exercise-category svg {
+      margin-right: 5px;
+    }
+    
+    /* Image */
+    .exercise-image {
+      width: 100%;
+      height: 250px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+    
+    .exercise-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    /* Tags */
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    
+    .tag {
+      background-color: #f0f0f0;
+      border-radius: 16px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .tag.primary {
+      background-color: #e6f2ff;
+      color: #0066cc;
+    }
+    
+    /* Description */
+    .description {
+      color: #555;
+      margin-bottom: 20px;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+    
+    /* Tabs */
+    .tabs {
+      margin-bottom: 20px;
+    }
+    
+    .tab-buttons {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      margin-bottom: 15px;
+    }
+    
+    .tab-button {
+      padding: 10px 15px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      font-weight: 500;
+      color: #666;
+    }
+    
+    .tab-button.active {
+      color: #0066cc;
+      border-bottom-color: #0066cc;
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+    }
+    
+    /* Lists */
+    .instruction-list {
+      padding-left: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .instruction-list li {
+      margin-bottom: 10px;
+    }
+    
+    /* Stats */
+    .stats {
+      background-color: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    
+    .stats-title {
+      font-weight: 600;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .stat-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .stat-label {
+      color: #666;
+    }
+    
+    .stat-value {
+      font-weight: 500;
+    }
+    
+    /* Action button */
+    .action-button {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background-color: #0066cc;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .action-button svg {
+      margin-right: 8px;
+    }
+    
+    .action-button:hover {
+      background-color: #0055aa;
+    }
+    
+    /* Responsive */
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+      
+      .exercise-image {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <button class="back-button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5M12 19l-7-7 7-7"></path>
+        </svg>
+        Back to Exercises
+      </button>
+    </div>
+    
+    <div class="content">
+      <div class="exercise-header">
+        <h1 class="exercise-title">Bench Press</h1>
+        <div class="exercise-category">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6.7 6.7h10.6v10.6H6.7z"></path>
+            <path d="M8.9 17.3v2.7M15.1 17.3v2.7M8.9 3.6v3.1M15.1 3.6v3.1M17.3 8.9h3.1M17.3 15.1h3.1M3.6 8.9h3.1M3.6 15.1h3.1"></path>
+          </svg>
+          Strength Training
+        </div>
+      </div>
+      
+      <div class="exercise-image">
+        <img src="https://placehold.co/800x400" alt="Bench Press demonstration">
+      </div>
+      
+      <div class="tags">
+        <span class="tag primary">Chest</span>
+        <span class="tag primary">Triceps</span>
+        <span class="tag primary">Shoulders</span>
+        <span class="tag">Intermediate</span>
+        <span class="tag">Barbell</span>
+      </div>
+      
+      <p class="description">
+        The bench press is a compound exercise that develops the chest, shoulders, and triceps. It involves lying on a bench and pressing weight upward using either a barbell or dumbbells.
+      </p>
+      
+      <div class="tabs">
+        <div class="tab-buttons">
+          <button class="tab-button active" data-tab="instructions">Instructions</button>
+          <button class="tab-button" data-tab="tips">Tips</button>
+        </div>
+        
+        <div class="tab-content active" id="instructions">
+          <ol class="instruction-list">
+            <li>Lie on a flat bench with your feet flat on the floor.</li>
+            <li>Grip the barbell slightly wider than shoulder-width apart.</li>
+            <li>Unrack the barbell and lower it to your mid-chest.</li>
+            <li>Press the barbell back up to the starting position.</li>
+            <li>Repeat for the desired number of repetitions.</li>
+          </ol>
+        </div>
+        
+        <div class="tab-content" id="tips">
+          <ul class="instruction-list">
+            <li>Keep your wrists straight and elbows at a 45-degree angle.</li>
+            <li>Maintain a slight arch in your lower back.</li>
+            <li>Keep your feet flat on the floor for stability.</li>
+            <li>Breathe out when pushing the weight up.</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="stats">
+        <h3 class="stats-title">Your Stats</h3>
+        <div class="stat-item">
+          <span class="stat-label">Personal Best</span>
+          <span class="stat-value">155 lbs × 8 reps</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Last Workout</span>
+          <span class="stat-value">135 lbs × 3 sets × 10 reps</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Sessions</span>
+          <span class="stat-value">24</span>
+        </div>
+      </div>
+      
+      <button class="action-button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+        Add to Workout
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // Simple tab functionality
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class from all buttons and content
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+        
+        // Add active class to clicked button and corresponding content
+        button.classList.add('active');
+        const tabId = button.getAttribute('data-tab');
+        document.getElementById(tabId).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

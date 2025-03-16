@@ -81,7 +81,7 @@
       null
     );
     customLists.value = customListsRequest.map(obj => ({
-      label: obj.title
+      label: obj.label
     }));
   }
 
@@ -179,10 +179,10 @@
     </div>
 
     <div id="list-content" class="flex mt-6 container">
-      <div class="w-1/5 mr-3 border-r border-gray-600 pr-3"> 
+      <!-- <div class="w-1/5 mr-3 border-r border-gray-600 pr-3"> 
         <span class="text-xl font-semibold dark:text-white">Lists</span>
         <UVerticalNavigation :links="customLists" class="mt-3"/>
-      </div>
+      </div> -->
 
       <!-- Table -->
       <div id="table" class="w-full overflow-auto h-1/2">

@@ -23,7 +23,7 @@
 <script setup>
     import { ref } from 'vue';
     import { AgGridVue } from 'ag-grid-vue3';
-    import { themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
+    import { themeAlpine, themeMaterial, themeBalham, themeQuartz, colorSchemeDarkBlue } from 'ag-grid-community';
     import { TableModel, PagingModel } from '~/models/TableModel';
     import { PaginationRequestModel, SortModel, FilterModel } from '~/models/PaginationRequestModel'
 

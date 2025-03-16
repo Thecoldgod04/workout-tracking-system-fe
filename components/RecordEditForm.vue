@@ -6,10 +6,14 @@
     <UForm class="space-y-4 mt-6" :state="state" @submit="onSubmit">
       <UFormGroup v-for="field in fields" :label="field.label" :name="field.name">
         <UInput 
-          v-if="field.type!='picklist' && field.type!='textarea' && field.type!='date' && field.type!='time' && field.type!='datetime'" 
+          v-if="field.type!='PICKLIST' && 
+                field.type!='TEXTAREA' && 
+                field.type!='DATE' && 
+                field.type!='TIME' && 
+                field.type!='DATETIME'" 
           :type="field.type" v-model="state[field.name]"/>
         <USelectMenu 
-          v-else-if="field.type=='picklist'" 
+          v-else-if="field.type=='PICKLIST'" 
           :options="field.data" v-model="state[field.name]"/>
       </UFormGroup>
 
