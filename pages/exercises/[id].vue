@@ -17,7 +17,7 @@
       <div class="p-4">
         <!-- Exercise header -->
         <div class="mb-6">
-          <h1 class="text-2xl font-bold">{{ exercise.name }}</h1>
+          <h1 class="text-2xl font-bold">{{ exerciseInfo?.name }}</h1>
           <div class="text-gray-500 flex items-center text-sm">
             <UIcon name="i-heroicons-adjustments-horizontal" class="mr-1" />
             {{ exercise.category }}
@@ -47,16 +47,16 @@
         <!-- Tags -->
         <div class="flex flex-wrap gap-2 mb-6">
           <UBadge
-            v-for="muscle in exercise.muscleGroups"
-            :key="muscle"
+            v-for="muscle in exerciseInfo?.targetMuscles"
+            :key="muscle.muscleName"
             color="primary"
             variant="soft"
             size="sm"
           >
-            {{ muscle }}
+            {{ muscle.muscleName }}
           </UBadge>
           <UBadge size="sm" variant="soft" color="gray">
-            {{ exercise.difficulty }}
+            {{ exerciseInfo?.difficulty }}
           </UBadge>
           <UBadge size="sm" variant="soft" color="gray">
             {{ exercise.equipment }}
@@ -128,6 +128,38 @@
 </template>
 
 <script setup>
+
+const { request } = useApp();
+
+const { id } = useRoute().params;
+
+const exerciseInfo = ref(undefined);
+
+// --------------- Functions ---------------
+
+onMounted(loadAsyncData);
+
+async function loadAsyncData() {
+  const exerciseInfoRequest = await request(
+    'GET',
+    '/exercises/info',
+    [{key: 'exerciseId', value: id}],
+    null
+  );
+
+  if(!exerciseInfoRequest) {
+    // Throw 404 (currently malfunctions)
+    throw createError({
+      statusCode: 404,
+      statusMessage: 'Resource Not Found!'
+    });
+  }
+
+  exerciseInfo.value = exerciseInfoRequest;
+
+  console.log(exerciseInfoRequest);
+}
+
 // Tabs configuration
 const tabs = [
   {
