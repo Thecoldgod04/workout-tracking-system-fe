@@ -12,10 +12,14 @@
             :paginationPageSize="pageSize"
             :cacheBlockSize="pageSize"
             :rowSelection="rowSelection"
+            :rowStyle="rowStyle"
             :selectionColumnDef="checkboxColumn"
+            :suppressCellFocus="true"
             @selection-changed="onSelectionChanged"
             @grid-ready="onGridReady"
+            @row-clicked="onRowClicked"
             >
+            <!-- @cell-clicked="onRowClicked" -->
         </ag-grid-vue>
     </div>
 </template>
@@ -34,13 +38,13 @@
     const defaultColDef = ref({
         flex: 1,  // Makes columns fill the width evenly
         minWidth: 100,
-        filter: true,
-        floatingFilter: true,
+        // filter: true,
+        // floatingFilter: true,
     });
 
     const props = defineProps({
         rows: Array,
-        onRowClicked: Function,
+        // onRowClicked: Function,
         maxHeight: String,
         maxWidth: String,
         tableModel: TableModel,
@@ -83,6 +87,10 @@
         },
         cellRendererParams: {
         },
+    };
+
+    const rowStyle = {
+        cursor: 'pointer'
     };
 
     const columnDefs = ref(props.tableModel.tableDataModel.headers);
@@ -163,6 +171,13 @@
         // Set the data source for AG Grid
         params.api.setGridOption("datasource", dataSource);
     };
+
+    const onRowClicked = (event) => {
+        // Ignore if the multi selection checkbox is clicked on
+        if(event.eventPath[0].localName === 'input') return;
+        
+        emit('rowClicked', event);
+    }
 
     // Select or Deselect all loaded rows manually
     const toggleSelectAll = () => {

@@ -156,8 +156,6 @@ async function loadAsyncData() {
   }
 
   exerciseInfo.value = exerciseInfoRequest;
-
-  console.log(exerciseInfoRequest);
 }
 
 // Tabs configuration

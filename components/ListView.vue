@@ -10,13 +10,7 @@
     fields: Array,
   });
 
-  const lists = [{
-    label: 'All',
-  }, {
-    label: 'Easy Exercises',
-  }, {
-    label: 'Outdated Exercises',
-  }];
+  const router = useRouter();
 
   const { request } = useApp();
 
@@ -31,7 +25,11 @@
   const isModalOpen = ref(false);
   const currentModal = ref("");
 
+  const isFilterPanelOpened = ref(false);
+
   const refreshTable = ref(false);
+
+  const listEndpoint = props.listName.toLowerCase();
 
   const moreActions = [
     [{
@@ -85,8 +83,10 @@
     }));
   }
 
-  function onRowClicked(rowData) {
-    console.log(rowData);
+  function onRowClicked(event) {
+    // Redirects to the detail/info view
+    const clickedId = event.data['id'];
+    router.push(`/${listEndpoint}/${clickedId}`);
   }
 
   function onModalOpen(currModal) {
@@ -102,7 +102,7 @@
 
     await request(
       'POST',
-      '/exercises/save',
+      `/${listEndpoint}/save`,
       null,
       data,
       false
@@ -118,8 +118,8 @@
     });
 
     await request(
-      'DELETE', 
-      '/exercises/delete',
+      'DELETE',
+      `/${listEndpoint}/delete`,
       null,
       selectedIds,
       false
@@ -142,6 +142,11 @@
       </div>
     </UModal>
 
+    <!-- Filter Panel -->
+    <USlideover v-model="isFilterPanelOpened">
+      
+    </USlideover>
+
     <!-- Action Bar -->
     <div id="action-bar" class="flex">
       <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
@@ -157,21 +162,25 @@
           </li>
           <li v-if="selected.length > 0">
             <UTooltip text="Remove [...]">
-              <UButton icon="i-heroicons-trash" color="red" @click="() => onModalOpen('confirmation')"/>
+              <UButton icon="i-heroicons-trash-solid" color="red" @click="() => onModalOpen('confirmation')"/>
             </UTooltip>
           </li>
           <li v-else>
             <UTooltip text="Remove [...]">
-              <UButton icon="i-heroicons-trash" color="red" variant="soft" disabled/>
+              <UButton icon="i-heroicons-trash-solid" color="red" variant="soft" disabled/>
             </UTooltip>
           </li>
+          <li>
+            <UTooltip text="Filter [...]">
+              <UButton icon="i-heroicons-adjustments-vertical-solid" @click="isFilterPanelOpened=true" variant="outline"/>
+            </UTooltip>
+          </li>
+          <li>
             <UDropdown :items="moreActions" :popper="{ placement: 'bottom-end' }">
               <UTooltip text="More Actions">
                 <UButton label="More Actions" variant="outline" trailing-icon="i-heroicons-chevron-down-20-solid"/>
               </UTooltip>
             </UDropdown>
-          <li>
-
           </li>
 
         </ul>
@@ -188,12 +197,12 @@
       <div id="table" class="w-full overflow-auto h-1/2">
         <!-- <UInput v-model="currentFilter" placeholder="Filter..." class="w-1/4"/> -->
         <Table
-          :onRowClicked="onRowClicked" 
           :maxHeight="tableMaxHeight"
           :tableModel="tableModel"
           v-model="selected"
           :key="refreshTable"
-        />
+          @rowClicked="onRowClicked"
+          />
       </div>
     </div>
 
