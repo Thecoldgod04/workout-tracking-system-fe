@@ -144,7 +144,7 @@
 
     <!-- Filter Panel -->
     <USlideover v-model="isFilterPanelOpened">
-      
+      <FilterForm :fields="fields" @submit="isFilterPanelOpened=false"/>
     </USlideover>
 
     <!-- Action Bar -->
